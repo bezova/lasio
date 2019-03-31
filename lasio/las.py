@@ -221,13 +221,21 @@ class LASFile(object):
         for key in drop:
             self.raw_sections.pop(key)
 
+        # Deal with LAS 3 sections
+        # or 
         # Deal with nonstandard sections that some operators and/or
         # service companies (eg IHS) insist on adding.
         drop = []
         for s in self.raw_sections.values():
             if s["section_type"] == "header":
-                logger.warning("Found nonstandard LAS section: " + s["title"])
-                self.sections[s["title"][1:]] = "\n".join(s["lines"])
+                if "_Definition" in s["title"]:
+                    section = reader.parse_header_section(s)
+                elif "|" in s["title"]
+                    parts = [p.strip() for p in s["title"].split("|")]
+                    if parts[-1] in section.keys(): # this is a data section linked to a LAS 3 section definition
+                        self.sections[parts[0]] = 
+                    section = "\n".join(s["lines"])
+                self.sections[s["title"][1:]] = section
                 drop.append(s["title"])
         for key in drop:
             self.raw_sections.pop(key)

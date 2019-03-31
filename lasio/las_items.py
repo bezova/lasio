@@ -23,6 +23,9 @@ class HeaderItem(OrderedDict):
         unit (str): the unit (no whitespace!)
         value (str): value
         descr (str): description
+        data (ndarray): optional
+        fmt (str): optional
+        association (str): optional
 
     These arguments are available for use as either items or attributes of the
     object.
@@ -36,7 +39,7 @@ class HeaderItem(OrderedDict):
         value="",
         descr="",
         data=None,
-        format=None,
+        fmt=None,
         association=None,
     ):
         super(HeaderItem, self).__init__()
@@ -68,8 +71,8 @@ class HeaderItem(OrderedDict):
         self.value = value
         self.descr = descr
         self.data = data
-        self.format = format
-        self.assocation = association
+        self.fmt = fmt
+        self.association = association
 
     @property
     def useful_mnemonic(self):
@@ -105,8 +108,8 @@ class HeaderItem(OrderedDict):
             return self.value
         elif key == "descr":
             return self.descr
-        elif key == "format":
-            return self.format
+        elif key == "fmt":
+            return self.fmt
         elif key == "association":
             return self.association
         else:
@@ -128,14 +131,14 @@ class HeaderItem(OrderedDict):
     def __repr__(self):
         result = (
             "%s(mnemonic=%s, unit=%s, value=%s, "
-            "descr=%s, format=%s, association=%s)"
+            "descr=%s, fmt=%s, association=%s)"
             % (
                 self.__class__.__name__,
                 self.mnemonic,
                 self.unit,
                 self.value,
                 self.descr,
-                self.format,
+                self.fmt,
                 self.association,
             )
         )
@@ -150,7 +153,7 @@ class HeaderItem(OrderedDict):
     def __reduce__(self):
         return (
             self.__class__,
-            (self.mnemonic, self.unit, self.value, self.descr, self.data),
+            (self.mnemonic, self.unit, self.value, self.descr, self.data, self.fmt, self.association),
         )
 
     @property
@@ -162,7 +165,7 @@ class HeaderItem(OrderedDict):
                 "unit": self.unit,
                 "value": self.value,
                 "descr": self.descr,
-                "format": self.format,
+                "fmt": self.fmt,
                 "association": self.association,
             }
         )
@@ -190,13 +193,13 @@ class CurveItem(HeaderItem):
         value="",
         descr="",
         data=None,
-        format=None,
+        fmt=None,
         association=None,
     ):
         if data is None:
             data = []
         super(CurveItem, self).__init__(
-            mnemonic, unit, value, descr, format=format, association=association
+            mnemonic, unit, value, descr, fmt=fmt, association=association
         )
         self.data = np.asarray(data)
 
@@ -208,14 +211,14 @@ class CurveItem(HeaderItem):
     def __repr__(self):
         return (
             "%s(mnemonic=%s, unit=%s, value=%s, "
-            "descr=%s, format=%s, association=%s, original_mnemonic=%s, data.shape=%s)"
+            "descr=%s, fmt=%s, association=%s, original_mnemonic=%s, data.shape=%s)"
             % (
                 self.__class__.__name__,
                 self.mnemonic,
                 self.unit,
                 self.value,
                 self.descr,
-                self.format,
+                self.fmt,
                 self.association,
                 self.original_mnemonic,
                 self.data.shape,
@@ -231,7 +234,7 @@ class CurveItem(HeaderItem):
                 "unit": self.unit,
                 "value": self.value,
                 "descr": self.descr,
-                "format": self.format,
+                "fmt": self.fmt,
                 "association": self.association,
                 "data": list(self.data),
             }
@@ -266,7 +269,7 @@ class SectionItems(list):
                     item.unit,
                     item.value,
                     item.descr,
-                    item.format,
+                    item.fmt,
                     item.association,
                 ]
             ]

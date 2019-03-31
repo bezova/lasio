@@ -647,7 +647,7 @@ class SectionParser(object):
 
     def params(self, **keys):
         """Return HeaderItem for ~P section (the same between 1.2 and 2.0 specs)
-
+                                          
         Keyword arguments should be the key:value pairs returned by
         :func:`lasio.reader.read_header_line`.
 
