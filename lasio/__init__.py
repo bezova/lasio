@@ -12,11 +12,11 @@ else:
     from .excel import ExcelConverter
 
 
-__version__ = '0.23'
+__version__ = "0.23"
 
 
 def read(file_ref, **kwargs):
-    '''Read a LAS file.
+    """Read a LAS file.
 
     Note that only versions 1.2 and 2.0 of the LAS file specification
     are currently supported.
@@ -37,5 +37,5 @@ def read(file_ref, **kwargs):
     * :meth:`lasio.las.LASFile.read` - control how NULL values and errors are
       handled during parsing
 
-    '''
+    """
     return LASFile(file_ref, **kwargs)
