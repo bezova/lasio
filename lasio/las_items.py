@@ -28,7 +28,7 @@ class HeaderItem(OrderedDict):
     object.
 
     '''
-    def __init__(self, mnemonic='', unit='', value='', descr='', data=None):
+    def __init__(self, mnemonic='', unit='', value='', descr='', data=None, format=None, association=None):
         super(HeaderItem, self).__init__()
 
         # The original mnemonic needs to be stored for rewriting a new file.
@@ -58,6 +58,8 @@ class HeaderItem(OrderedDict):
         self.value = value
         self.descr = descr
         self.data = data
+        self.format = format
+        self.assocation = association 
 
     @property
     def useful_mnemonic(self):
@@ -93,6 +95,10 @@ class HeaderItem(OrderedDict):
             return self.value
         elif key == 'descr':
             return self.descr
+        elif key == "format":
+            return self.format
+        elif key == "association":
+            return self.association
         else:
             raise KeyError(
                 'CurveItem only has restricted items (not %s)' % key)
@@ -113,9 +119,9 @@ class HeaderItem(OrderedDict):
     def __repr__(self):
         result = (
             '%s(mnemonic=%s, unit=%s, value=%s, '
-            'descr=%s)' % (
+            'descr=%s, format=%s, association=%s)' % (
                 self.__class__.__name__, self.mnemonic, self.unit, self.value,
-                self.descr))
+                self.descr, self.format, self.association))
         if len(result) > 80:
             return result[:76] + '...)'
         else:
@@ -136,6 +142,8 @@ class HeaderItem(OrderedDict):
             'unit': self.unit,
             'value': self.value,
             'descr': self.descr
+            "format": self.format,
+            "association": self.association
             })
 
     @json.setter
@@ -154,10 +162,10 @@ class CurveItem(HeaderItem):
 
     '''
 
-    def __init__(self, mnemonic='', unit='', value='', descr='', data=None):
+    def __init__(self, mnemonic='', unit='', value='', descr='', data=None, format=None, association=None):
         if data is None:
             data = []
-        super(CurveItem, self).__init__(mnemonic, unit, value, descr)
+        super(CurveItem, self).__init__(mnemonic, unit, value, descr, format=format, association=association)
         self.data = np.asarray(data)
 
     @property
@@ -168,9 +176,9 @@ class CurveItem(HeaderItem):
     def __repr__(self):
         return (
             '%s(mnemonic=%s, unit=%s, value=%s, '
-            'descr=%s, original_mnemonic=%s, data.shape=%s)' % (
+            'descr=%s, format=%s, association=%s, original_mnemonic=%s, data.shape=%s)' % (
                 self.__class__.__name__, self.mnemonic, self.unit, self.value,
-                self.descr, self.original_mnemonic, self.data.shape))
+                self.descr, self.format, self.association, self.original_mnemonic, self.data.shape))
 
     @property
     def json(self):
@@ -180,6 +188,8 @@ class CurveItem(HeaderItem):
             'unit': self.unit,
             'value': self.value,
             'descr': self.descr,
+            "format": self.format,
+            "association": self.association,
             'data': list(self.data),
             })
 
@@ -199,10 +209,10 @@ class SectionItems(list):
 
     def __str__(self):
         rstr_lines = []
-        data = [['Mnemonic', 'Unit', 'Value', 'Description'],
-                ['--------', '----', '-----', '-----------']]
+        data = [['Mnemonic', 'Unit', 'Value', 'Description', "Format", "Association"],
+                ['--------', '----', '-----', '-----------', "------", "-----------"]]
         data += [[str(x) for x in [item.mnemonic, item.unit, item.value, 
-                                   item.descr]] for item in self]
+                                   item.descr, item.format, item.association]] for item in self]
         col_widths = []
         for i in range(len(data[0])):
             col_widths.append(max([len(row[i]) for row in data]))
