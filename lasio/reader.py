@@ -244,7 +244,7 @@ def read_file_contents(file_obj, regexp_subs, value_null_subs,
          "title": str,               # title of section (including the ~)
          "lines": [str, ],           # a list of the lines from the lAS file
          "line_nos": [int, ]         # line nos from the original file
-         }
+         } 
 
     or::
 
@@ -653,7 +653,7 @@ def read_header_line(line, pattern=None):
         containing a string as value.
 
     '''
-    d = {'name': '', 'unit': '', 'value': '', 'descr': ''}
+    d = {'name': '', 'unit': '', 'value': '', 'descr': '', "format": "", "association": ""}
     if pattern is None:
         if not ':' in line:
             pattern = (r'\.?(?P<name>[^.]*)\.' +
