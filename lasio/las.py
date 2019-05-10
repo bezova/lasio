@@ -126,7 +126,7 @@ class LASFile(object):
                                                                   **sect_kws)
                 drop.append(raw_section["title"])
             else:
-                logger.warning("Header section %s regexp=%s was not found."
+                logger.info("Header section %s regexp=%s was not found."
                                % (name, pattern))
             for key in drop:
                 self.raw_sections.pop(key)
@@ -140,13 +140,13 @@ class LASFile(object):
         try:
             version = self.version['VERS'].value
         except KeyError:
-            logger.warning('VERS item not found in the ~V section.')
+            logger.info('VERS item not found in the ~V section.')
             version = None
 
         try:
             wrap = self.version['WRAP'].value
         except KeyError:
-            logger.warning('WRAP item not found in the ~V section')
+            logger.info('WRAP item not found in the ~V section')
             wrap = None
 
         # Validate version.
@@ -178,7 +178,7 @@ class LASFile(object):
         try:
             null = self.well['NULL'].value
         except KeyError:
-            logger.warning('NULL item not found in the ~W section')
+            logger.info('NULL item not found in the ~W section')
             null = None
 
         add_section("~C", "Curves", version=version, 
@@ -201,7 +201,7 @@ class LASFile(object):
         drop = []
         for s in self.raw_sections.values():
             if s["section_type"] == "header":
-                logger.warning('Found nonstandard LAS section: ' + s["title"])
+                logger.info('Found nonstandard LAS section: ' + s["title"])
                 self.sections[s["title"][1:]] = "\n".join(s["lines"])
                 drop.append(s["title"])
         for key in drop:
