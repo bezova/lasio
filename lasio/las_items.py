@@ -111,15 +111,17 @@ class HeaderItem(OrderedDict):
             super(HeaderItem, self).__setattr__(key, value)
 
     def __repr__(self):
-        result = (
-            '%s(mnemonic=%s, unit=%s, value=%s, '
-            'descr=%s)' % (
-                self.__class__.__name__, self.mnemonic, self.unit, self.value,
-                self.descr))
-        if len(result) > 80:
-            return result[:76] + '...)'
-        else:
-            return result
+        result = "<{class_name} {mnemonic}.{unit}\t{value} : {descr}".format(
+            class_name=self.__class__.__name__,
+            mnemonic=self.mnemonic,
+            unit=self.unit,
+            value=self.value,
+            descr=self.descr
+        )
+        n = 50
+        if len(result) > n:
+            result = result[:n] + "..."
+        return result + ">"
 
     def _repr_pretty_(self, p, cycle):
         return p.text(self.__repr__())
@@ -166,11 +168,17 @@ class CurveItem(HeaderItem):
         return self.value
 
     def __repr__(self):
-        return (
-            '%s(mnemonic=%s, unit=%s, value=%s, '
-            'descr=%s, original_mnemonic=%s, data.shape=%s)' % (
-                self.__class__.__name__, self.mnemonic, self.unit, self.value,
-                self.descr, self.original_mnemonic, self.data.shape))
+        result = "<{class_name} {mnemonic}.{unit}\t{shape} {dtype}".format(
+            class_name=self.__class__.__name__,
+            mnemonic=self.mnemonic,
+            unit=self.unit,
+            shape=str(self.data.shape),
+            dtype=str(self.data.dtype)
+        )
+        n = 50
+        if len(result) > n:
+            result = result[:n] + "..."
+        return result + ">"
 
     @property
     def json(self):

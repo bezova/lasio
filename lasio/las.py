@@ -62,6 +62,8 @@ class LASFile(object):
 
     def __init__(self, file_ref=None, **read_kwargs):
         super(LASFile, self).__init__()
+        self._repr_file_ref = "memory"
+
         self._text = ""
         self.index_unit = None
         default_items = defaults.get_default_items()
@@ -109,6 +111,7 @@ class LASFile(object):
         arguments which help to manage issues relate to character encodings.
 
         """
+        self._repr_file_ref = str(file_ref)
 
         file_obj, self.encoding = reader.open_file(file_ref, **kwargs)
 
@@ -312,6 +315,15 @@ class LASFile(object):
         writer.write(self, file_ref, **kwargs)
         if opened_file:
             file_ref.close()
+
+    def __repr__(self):
+        x = self._repr_file_ref
+
+        # Do not allow __repr__() to exceed 80 chars.
+        n = 80 - 16
+        if len(x) > n:
+            x = x[(-1 * n):]
+        return "<LASFile from {}>".format(x)
 
     def to_excel(self, filename):
         """Export LAS file to a Microsoft Excel workbook.
