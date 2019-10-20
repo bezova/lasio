@@ -32,15 +32,6 @@ class AsciiSectionExists(Rule):
             return False
 
 
-class MandatorySections(Rule):
-    @staticmethod
-    def check(las_file):
-        return VersionSectionExists.check(las_file) and \
-               WellSectionExists.check(las_file) and \
-               CurvesSectionExists.check(las_file) and \
-               AsciiSectionExists.check(las_file)
-
-
 class MandatoryLinesInVersionSection(Rule):
     @staticmethod
     def check(las_file):
