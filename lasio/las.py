@@ -848,13 +848,12 @@ class LASFile(object):
         raise Exception("Cannot set objects from JSON")
 
     def check_conforming(self):
-        return spec.MandatorySections.check(self) and \
-               spec.MandatoryLinesInVersionSection.check(self) and \
-               spec.MandatoryLinesInWellSection.check(self) and \
-               spec.DuplicateSections.check(self) and \
-               spec.ValidIndexMnemonic.check(self) and \
-               spec.VSectionFirst.check(self)
-
+        # TODO: add a function to lasio/spec/__init__.py to
+        # dynamically discover the relevant checks from
+        # lasio/spec/checks.py and then provide information
+        # back to the user.
+        
+        
 
 class Las(LASFile):
 

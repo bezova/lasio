@@ -1,5 +1,12 @@
-class Rule:
-    pass
+# TODO: Replace all these classes as inheriting a parent class from spec_stubs.py
+#
+# If the class checks off on a specification, it should inherit from the
+# stub class for that specification.
+#
+# Please do not create a child of multiple specifications. We want the
+# functionality to be granular - remember we want these classes to also 
+# implement a "correct()" method in the future, which will be more difficult
+# to implement if they inherit from multiple specifications.
 
 
 class WellSectionExists(Rule):

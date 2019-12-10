@@ -1,0 +1,1 @@
+# TODO: see comments in lasio.LASFile.check_conforming()
