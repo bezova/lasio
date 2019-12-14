@@ -13,24 +13,27 @@ The Log ASCII Standard file format specifications are copied here:
 - [LAS_20_Update_Jan2014.pdf](LAS_20_Update_Jan2014.pdf)
 - [LAS_20_Update_Jan2014.txt](LAS_20_Update_Jan2014.txt)
 
-## Version 3.0
+## Version 3.0 (not supported by `lasio` yet)
 
 - [LAS_3_File_Structure.pdf](LAS_3_File_Structure.pdf)
 
 # Specifications
 
-I've pulled out all the statements like "files must do this", etc, and listed them
-succinctly in [specifications.md](specifications.md). This Markdown file is actually
-intended to be machine readable, in order to generate stub code for code in ``lasio.spec``,
-which actually checks LAS files for conformity and provides a link right back to the
-section of the specification that has not been met.
+One aim for `lasio` is to provide a method which checks whether a particular LAS
+file meets all of the requirements (and recommendations) of the relevant
+specification (above).
 
-## Generating stub code
+In order to achieve this, I've pulled out all the statements from the
+specifications which are effectively requirements ("LAS files must xyz") or
+recommendations ("LAS files should xyz"), and manually listed them in
+[specifications.md](specifications.md). This is a machine-readable Markdown
+file.
 
-Run the Python script ``parse_rules_from_markdown.py``. This will print the source
-code for a Python module to stdout:
+The script [parse_rules_from_markdown.py](parse_rules_from_markdown.py) can then
+be run manually to extract each rule (whether a requirement or recommendation)
+and create stub code containing a class for each rule.
 
-```bash
+```
 $ python standards/parse_rules_from_markdown.py
 from specbase import Specification
 
@@ -60,9 +63,34 @@ class Recommendation_0e774882_V20(Specification):
     spec_version = 2.0
 ```
 
-... and so on. This output is then added to the lasio repository by hand as the
-file ``lasio/spec/spec_stubs.py``.
+... and so on. 
 
-In order to actually implement a check, follow the pattern shown in ``lasio/spec/checks.py``.
-Everything else should be automatic. NOTE: This is a work in progress and as such the code
-in that module is not updated yet.
+The idea is that then this code is added or updated manually to the `lasio` code
+repository as the file [../lasio/spec/spec_stubs.py](lasio/spec/spec_stubs.py),
+and therefore available in the `lasio` package as ``lasio.spec.spec_stubs``.
+
+Then the actual code which checks a LAS file to see whether the requirement is
+met or not should be implemented as a class with a ``check(las_file_object) ->
+True | False`` method, in the ``[../lasio/spec/checks.py](lasio.spec.checks)``
+module. The class should inherit from the relevant requirement class in
+``lasio.spec.spec_stubs``.
+
+Later, these classes should also be expanded to have a ``fix(las_file_object) ->
+LASFile`` method which would fix the LAS file so that it now abides by the
+relevant  requirement/recommendation.
+
+Any functionality common to all requirements/recommendations should be
+implemented in the
+``[../lasio/spec/specbase.py](lasio.spec.specbase.Specification)`` class.
+
+The final user-facing interface should be accessible from
+``[../lasio/spec/__init__.py](lasio.spec)``. I see this as functions or classes
+which simply collect the relevant classes from ``lasio.spec.checks`` ad run
+them. Methods can be added to ``LASFile`` to call these functions. I'm not sure
+what we might end up with but some examples would be:
+
+- ``LASFile().check_conforming() -> True | False``
+- ``LASFile().conformity() -> LASConformity`` which provides information on 
+  which requirements/recommendations are met and which fail
+- ``LASFile().make_conforming(requirements=True, recommendations=False) -> 
+  LASFile`` - to make a LAS file conformant to the specification
