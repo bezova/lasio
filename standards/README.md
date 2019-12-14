@@ -44,7 +44,7 @@ class Recommendation_08a2bd5f_V20(Specification):
 
     Link to the relevant part of the Log ASCII Standard specification:
 
-    https://github.com/kinverarity1/lasio/blob/7ff37548c896bd50f08671e638ab35720f272591/standards/LAS_20_Update_Jan2014.txt#L290
+    https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L290
 
     '''
     spec_type = "Recommendation"
@@ -56,7 +56,7 @@ class Recommendation_0e774882_V20(Specification):
 
     Link to the relevant part of the Log ASCII Standard specification:
 
-    https://github.com/kinverarity1/lasio/blob/7ff37548c896bd50f08671e638ab35720f272591/standards/LAS_20_Update_Jan2014.txt#L455-L456
+    https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L455-L456
 
     '''
     spec_type = "Recommendation"
