@@ -82,7 +82,7 @@
 - Requirement: [The `~W` section must contain either a `UWI` or `API` item](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L327-L337)
 - Requirement: [The `~W` section must contain a `LIC` item if `PROV` is `"Alberta"`](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L344)
 - Requirement: [The `~C` section must exist](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L369)
-- Recommenation: [All curves in the data section should be defined in the `~C` section](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L371-L372)
+- Recommendation: [All curves in the data section should be defined in the `~C` section](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L371-L372)
 - Requirement: [All curves in the `~C` section should exist in the data section](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L376)
 - Requirement: [The first curve item must have a mnemonic of either `DEPT`, `DEPTH`, or `TIME`](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L378-L379)
 - Requirement: [The data `~A` section must be the last section in the file](https://github.com/kinverarity1/lasio/blob/7ff375/standards/LAS_20_Update_Jan2014.txt#L450)
