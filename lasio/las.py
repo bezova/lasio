@@ -847,11 +847,19 @@ class LASFile(object):
     def json(self, value):
         raise Exception("Cannot set objects from JSON")
 
-    def check_conforming(self):
+    def check_conforming(self, **kwargs):
         # TODO: add a function to lasio/spec/__init__.py to
         # dynamically discover the relevant checks from
         # lasio/spec/checks.py and then provide information
         # back to the user.
+
+        # Use self.conformity(**kwargs)
+        pass
+
+    def conformity(self, requirements=True, recommendations=True):
+        # TODO: add function to lasio/spec/__init__.py to
+        # run all relevant checks and provide their results
+        # in some kind of container - perhaps a dictionary?
         pass
         
         
