@@ -852,6 +852,7 @@ class LASFile(object):
         # dynamically discover the relevant checks from
         # lasio/spec/checks.py and then provide information
         # back to the user.
+        pass
         
         
 
