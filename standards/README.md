@@ -66,12 +66,12 @@ class Recommendation_0e774882_V20(Specification):
 ... and so on. 
 
 The idea is that then this code is added or updated manually to the `lasio` code
-repository as the file [``../lasio/spec/spec_stubs.py``](lasio/spec/spec_stubs.py),
+repository as the file [``lasio/spec/spec_stubs.py``](../lasio/spec/spec_stubs.py),
 and therefore available in the `lasio` package as ``lasio.spec.spec_stubs``.
 
 Then the actual code which checks a LAS file to see whether the requirement is
 met or not should be implemented as a class with a ``check(las_file_object) ->
-True | False`` method, in the [``../lasio/spec/checks.py``](lasio.spec.checks)
+True | False`` method, in the [``lasio.spec.checks``](../lasio/spec/checks.py)
 module. The class should inherit from the relevant requirement class in
 ``lasio.spec.spec_stubs``.
 
@@ -81,10 +81,10 @@ relevant  requirement/recommendation.
 
 Any functionality common to all requirements/recommendations should be
 implemented in the
-[``../lasio/spec/specbase.py``](lasio.spec.specbase.Specification) class.
+[``lasio.spec.specbase.Specification``](../lasio/spec/specbase.py) class.
 
 The final user-facing interface should be accessible from
-[``../lasio/spec/__init__.py``](lasio.spec). I see this as functions or classes
+[``lasio.spec``](../lasio/spec/__init__.py). I see this as functions or classes
 which simply collect the relevant classes from ``lasio.spec.checks`` ad run
 them. Methods can be added to ``LASFile`` to call these functions. I'm not sure
 what we might end up with but some examples would be:
