@@ -19,7 +19,7 @@ class TemporaryRule:
         self.version = version
 
     def name_hash(self):
-        return blake2b(self.name.encode("ascii"), digest_size=4).hexdigest()
+        return blake2b(f"{self.name}_{self.version}".encode("ascii"), digest_size=4).hexdigest()
     
     def version_hash(self):
         return f"{float(self.version):.1f}".replace(".", "")
