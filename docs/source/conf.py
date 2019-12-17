@@ -119,7 +119,7 @@ todo_include_todos = True
 
 # -- Options for HTML output ----------------------------------------------
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'pandas_sphinx_theme'
 html_sidebars = {
     '**': [
         'about.html',

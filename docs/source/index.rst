@@ -1,7 +1,9 @@
 ``lasio`` - Log ASCII Standard (LAS) files in Python
 ====================================================
 
-|Status| |License| |Research software impact|
+.. |Status| 
+|License| 
+.. |Research software impact|
 
 This is a Python 2/3 package to read and write Log ASCII Standard (LAS)
 files, used for borehole data such as geophysical, geological, or
@@ -33,14 +35,8 @@ files”).
    :maxdepth: 5
 
    installation
-   basic-example
-   pandas
-   header-section
-   data-section
-   writing
-   exporting
-   building
-   encodings
+   quickstart
+   user-guide/index
    contributing
    lasio
 

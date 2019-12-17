@@ -1,5 +1,5 @@
-Basic example 
-=============
+Quickstart
+==========
 
 In the example below you can see how to:
 
