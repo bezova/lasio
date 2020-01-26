@@ -1,18 +1,8 @@
 language: python
-python:
-    # - "2.6"
-    - "2.7"
-    # - "3.3"
-    # - "3.4"
-    - "3.5"
-    - "3.6"
-    # - "3.7-dev"
+dist: trusty
 install:
   - pip install -r requirements.txt
   - pip install -r optional-packages.txt
-  # - pip install pandas pytest requests
-  # - pip install ordereddict cchardet argparse chardet
-  # - pip install openpyxl==2.0.3
   - python setup.py install
 script:
     - pytest
@@ -23,3 +13,23 @@ notifications:
       - kinverarity@hotmail.com
     on_success: change
     on_failure: change
+matrix:
+  include:
+  - os: linux
+    python: 2.6
+  - os: linux
+    dist: xenial
+    python: 2.7
+  - os: linux
+    dist: xenial
+    python: 3.5
+  - os: linux
+    dist: xenial
+    python: 3.6
+  - os: linux
+    dist: xenial
+    python: 3.7
+  - os: linux
+    dist: xenial
+    python: 3.8
+
