@@ -302,9 +302,21 @@ class LASFile(object):
                     check_units_on.append(self.well[mnemonic])
             if len(self.curves) > 0:
                 check_units_on.append(self.curves[0])
+            matches = []
             for index_unit, possibilities in defaults.DEPTH_UNITS.items():
-                if all(i.unit.upper() in possibilities for i in check_units_on):
-                    self.index_unit = index_unit
+                for check_unit in check_units_on:
+                    if any([check_unit.unit == p for p in possibilities]) or any(
+                        [check_unit.unit.upper() == p for p in possibilities]
+                    ):
+                        matches.append(index_unit)
+            matches = set(matches)
+            if len(matches) == 1:
+                self.index_unit = tuple(matches)[0]
+            elif len(matches) == 0:
+                self.index_unit = None
+            else:
+                logger.warning("Conflicting index units found: {}".format(matches))
+                self.index_unit = None
 
     def write(self, file_ref, **kwargs):
         """Write LAS file to disk.
@@ -850,7 +862,11 @@ class LASFile(object):
         """Return object contents as a JSON string."""
         return self.to_json()
 
-    def to_json(self):
+    def to_json_old(self):
+        """
+        deprecated: to_json_old version=0.25.1 since=20200507 remove=20210508
+        replacement_options: to_json()
+        """
         obj = OrderedDict()
         for name, section in self.sections.items():
             try:
@@ -858,6 +874,9 @@ class LASFile(object):
             except AttributeError:
                 obj[name] = json.dumps(section)
         return json.dumps(obj)
+
+    def to_json(self):
+        return json.dumps(self, cls=JSONEncoder)
 
     @json.setter
     def json(self, value):

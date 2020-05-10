@@ -45,6 +45,7 @@ URL_REGEXP = re.compile(
     re.IGNORECASE,
 )
 
+
 def check_for_path_obj(file_ref):
     """Check if file_ref is a pathlib.Path object.
 
@@ -313,13 +314,18 @@ def read_file_contents(file_obj, regexp_subs, value_null_subs, ignore_data=False
             # HARD CODED FOR VERSION 1.2 and 2.0; needs review for 3.0
             # We have finished looking at the metadata and need
             # to start reading numerical data.
+
             if not sect_title_line is None:
-                sections[sect_title_line] = {
-                    "section_type": "header",
-                    "title": sect_title_line,
-                    "lines": sect_lines,
-                    "line_nos": sect_line_nos,
-                }
+               sections[sect_title_line] = {
+                   "section_type": "header",
+                   "title": sect_title_line,
+                   "lines": sect_lines,
+                   "line_nos": sect_line_nos,
+               }
+               sect_lines = []
+               sect_line_nos = []
+        
+
             if not ignore_data:
                 try:
                     data = read_data_section_iterative(
@@ -339,19 +345,22 @@ def read_file_contents(file_obj, regexp_subs, value_null_subs, ignore_data=False
                     "array": data,
                 }
                 logger.debug('Data section ["array"].shape = {}'.format(data.shape))
+
+            section_exists = False
             break
 
         elif line.startswith("~"):
             if section_exists:
                 # We have ended a section and need to start the next
-                sections[sect_title_line] = {
-                    "section_type": "header",
-                    "title": sect_title_line,
-                    "lines": sect_lines,
-                    "line_nos": sect_line_nos,
-                }
-                sect_lines = []
-                sect_line_nos = []
+               if not sect_title_line is None:
+                   sections[sect_title_line] = {
+                       "section_type": "header",
+                       "title": sect_title_line,
+                       "lines": sect_lines,
+                       "line_nos": sect_line_nos,
+                   }
+                   sect_lines = []
+                   sect_line_nos = []
             else:
                 # We are entering into a section for the first time
                 section_exists = True
@@ -363,6 +372,17 @@ def read_file_contents(file_obj, regexp_subs, value_null_subs, ignore_data=False
             if not line.startswith("#"):  # ignore commented-out lines.. for now.
                 sect_lines.append(line)
                 sect_line_nos.append(i + 1)
+
+    # If the file had header data only, and is truncated before the ~A section
+    # we need to save the last header section.
+    if section_exists and not sect_title_line is None:
+        sections[sect_title_line] = {
+            "section_type": "header",
+            "title": sect_title_line,
+            "lines": sect_lines,
+            "line_nos": sect_line_nos,
+        }
+
 
     # Find the number of columns in the data section(s). This is only
     # useful if WRAP = NO, but we do it for all since we don't yet know
@@ -403,6 +423,7 @@ def read_data_section_iterative(file_obj, regexp_subs, value_null_subs):
         for line in f:
             for pattern, sub_str in regexp_subs:
                 line = re.sub(pattern, sub_str, line)
+            line = line.replace(chr(26), "")
             for item in line.split():
                 try:
                     yield np.float64(item)
@@ -463,7 +484,9 @@ def get_substitutions(read_policy, null_policy):
                 if item in subs:
                     all_subs += subs[item]
                     if item == "NULL":
-                        logger.debug("located substitution for LAS.version.NULL as True")
+                        logger.debug(
+                            "located substitution for LAS.version.NULL as True"
+                        )
                         version_NULL = True
                 else:
                     all_subs.append(item)
@@ -646,12 +669,12 @@ class SectionParser(object):
 
         """
         # number_strings: fields that shouldn't be converted to numbers
-        number_strings = ['API', 'UWI']
+        number_strings = ["API", "UWI"]
 
         key_order = self.orders.get(keys["name"], self.default_order)
 
-        value = ''
-        descr = ''
+        value = ""
+        descr = ""
 
         if key_order == "value:descr":
             value = keys["value"]
@@ -670,7 +693,6 @@ class SectionParser(object):
             descr,  # descr
         )
         return item
-
 
     def curves(self, **keys):
         """Return CurveItem.
@@ -737,7 +759,9 @@ def read_header_line(line, pattern=None, section_name=None):
 
     # Alternate regular expressions for special cases
     value_without_colon_delimiter_re = r"(?P<value>[^:]*)"
-    value_re_for_param_section = r"(?P<value>.*?)(?:(?<!( [0-2][0-3]| hh| HH)):(?!([0-5][0-9]|mm|MM)))"
+    value_re_for_param_section = (
+        r"(?P<value>.*?)(?:(?<!( [0-2][0-3]| hh| HH)):(?!([0-5][0-9]|mm|MM)))"
+    )
     name_with_dots_re = r"\.?(?P<name>[^.].*[.])\."
     no_desc_re = ""
 
@@ -752,27 +776,22 @@ def read_header_line(line, pattern=None, section_name=None):
             value_re = value_without_colon_delimiter_re
             desc_re = no_desc_re
 
-            if '..' in line and section_name == 'Curves':
+            if ".." in line and section_name == "Curves":
                 name_re = name_with_dots_re
         else:
-            if '..' in line and section_name == 'Curves':
-                double_dot = line.find('..')
-                desc_colon = line.rfind(':')
+            if ".." in line and section_name == "Curves":
+                double_dot = line.find("..")
+                desc_colon = line.rfind(":")
 
                 # Check that a double_dot in not in the
                 # description string.
                 if double_dot < desc_colon:
                     name_re = name_with_dots_re
-            if section_name == 'Parameter':
+            if section_name == "Parameter":
                 value_re = value_re_for_param_section
 
     # Build full regex pattern
-    pattern = (
-        name_re
-        + unit_re
-        + value_re
-        + desc_re
-    )
+    pattern = name_re + unit_re + value_re + desc_re
 
     m = re.match(pattern, line)
     if m is None:
